@@ -11,7 +11,6 @@ export default class TutorialsList extends Component {
     this.refreshList = this.refreshList.bind(this);
     this.setActiveTutorial = this.setActiveTutorial.bind(this);
     this.removeAllTutorials = this.removeAllTutorials.bind(this);
-    this.searchTitle = this.searchTitle.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
 
@@ -36,27 +35,32 @@ export default class TutorialsList extends Component {
     const searchTitle = e.target.value;
 
     this.setState({
-      searchTitle: searchTitle
+      searchTitle: searchTitle,
     });
   }
 
   getRequestParams(searchTitle, page, pageSize) {
     let params = {};
+
     if (searchTitle) {
       params["title"] = searchTitle;
     }
+
     if (page) {
       params["page"] = page - 1;
     }
+
     if (pageSize) {
       params["size"] = pageSize;
     }
+
     return params;
   }
 
   retrieveTutorials() {
     const { searchTitle, page, pageSize } = this.state;
     const params = this.getRequestParams(searchTitle, page, pageSize);
+
     TutorialDataService.getAll(params)
       .then((response) => {
         const { tutorials, totalPages } = response.data;
@@ -144,12 +148,12 @@ export default class TutorialsList extends Component {
     this.setState(
       {
         pageSize: event.target.value,
-        page: 1,
+        page: 1
       },
       () => {
         this.retrieveTutorials();
       }
-    )
+    );
   }
 
   render() {
@@ -187,7 +191,7 @@ export default class TutorialsList extends Component {
           <h4>Tutorials List</h4>
 
           <div className="mt-3">
-            {"Items per Page :"}
+            {"Items per Page: "}
             <select onChange={this.handlePageSizeChange} value={pageSize}>
               {this.pageSizes.map((size) => (
                 <option key={size} value={size}>
@@ -207,6 +211,7 @@ export default class TutorialsList extends Component {
               onChange={this.handlePageChange}
             />
           </div>
+
           <ul className="list-group">
             {tutorials &&
               tutorials.map((tutorial, index) => (
